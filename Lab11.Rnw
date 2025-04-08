@@ -41,6 +41,16 @@ conduct a power analysis. How many observations would the researchers
 need to detect a moderate-to-large effect ($d=0.65$) when using 
 $\alpha=0.05$ and default power (0.80) for a two-sided one sample 
 $t$ test.
+
+<<echo=F, message=F, warning=F>>=
+library(pwr)
+pwr.t.test(n = NULL, d = 0.65, sig.level = 0.05, power = 0.8, type = "one.sample", alternative = "two.sided")
+
+@
+
+\textbf{Researchers would need approximately 21 observations to detect a moderate-to-large
+effect.}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % COLLECT DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,6 +60,16 @@ do to collect the data for Figure 2(g). Note that you only need the
 \texttt{closer\_vals} and \texttt{further\_vals}. Ensure to 
 \texttt{mutate()} the data to get a difference 
 (e.g., \texttt{closer\_vals - further\_vals}).
+
+<<echo=F, message=F, warning=F>>=
+
+data = read_csv("lab11data.csv")
+view(data)
+data = data |>
+  mutate(difference = Closer.vals - Farther.vals)
+view(data)
+@
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SUMMARIZE DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,6 +89,13 @@ do to collect the data for Figure 2(g). Note that you only need the
   Note that the you can use \texttt{geom\_errorbar()} to plot
   the range created by adding the mean $\pm$ one standard deviation.
 \end{enumerate}
+<<echo=F, message=F, warning=F>>=
+data = read_csv("lab11data.csv")
+data = data |> 
+  mutate(summarize(mean = ))
+
+@
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
