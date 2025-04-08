@@ -95,15 +95,22 @@ data = read_csv("lab11data.csv")
 data = data |>
   mutate(difference = Closer.vals - Farther.vals)
 
-data = data |> 
-  summarize(mean.farther = mean(Farther.vals),
-            sd.farther = sd(Farther.vals),
-            mean.closer = mean(Closer.vals),
-            sd.closer = sd(Closer.vals),
-            mean.diff = mean(difference),
-            sd.diff = sd(difference))
+summary = tibble(
+  Condition = c("Farther", "Closer", "Difference"),
+  Mean = c(mean(data$Farther.vals), mean(data$Closer.vals), mean(data$difference)),
+  SD = c(sd(data$Farther.vals), sd(data$Closer.vals), sd(data$difference))
+)
 
-view(data)
+ggplot(summary, aes(x = Condition, y = Mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin = Mean - SD, ymax = Mean + SD)) + 
+  labs(
+    title = "Summary of Dopamine Responses",
+    x = "Condition",
+    y = "Mean ± 1 SD"
+  ) +
+  theme_minimal()
+
 
 
 
@@ -122,6 +129,25 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
   \item ``The far responses differed significantly from 0 ($p=5.17 \times 10^{-8}$).''
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
 \end{enumerate}
+
+<<echo = F, message = T, warning = F>>=
+data = read_csv("lab11data.csv")
+
+data = data |>
+  mutate(difference = Closer.vals - Farther.vals)
+# a 
+ttest.closer = t.test(data$Closer.vals, mu = 0)
+ttest.closer
+
+# b
+ttest.farther = t.test(data$Farther.vals, mu = 0)
+ttest.farther
+
+# c
+ttest.difference = t.test(data$difference, mu = 0)
+ttest.difference
+@
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -134,6 +160,21 @@ hypothesis testing plots for each part of the previous question.
 \end{enumerate}
 \end{enumerate}
 
+<<echo = F, message = F, warning = F>>=
+
+data = read_csv("lab11data.csv")
+
+data = data |>
+  mutate(difference = Closer.vals - Farther.vals)
+
+ttest.closer = t.test(data$Closer.vals, mu = 0)
+ttest.farther = t.test(data$Farther.vals, mu = 0)
+ttest.difference = t.test(data$difference, mu = 0)
+
+
+
+
+@
 
 \bibliography{bibliography}
 \end{document}

@@ -140,10 +140,8 @@ do to collect the data for Figure 2(g). Note that you only need the
   the range created by adding the mean $\pm$ one standard deviation.
 \end{enumerate}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `mutate()`:\\\#\# i In argument: `summarize(mean = )`.\\\#\# Caused by error in `UseMethod()`:\\\#\# ! no applicable method for 'summarise' applied to an object of class "{}name"{}}}\end{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
 \end{knitrout}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -159,6 +157,49 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
   \item ``The far responses differed significantly from 0 ($p=5.17 \times 10^{-8}$).''
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
 \end{enumerate}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Rows: 25 Columns: 2\\\#\# -- Column specification --------------------------------------------------------\\\#\# Delimiter: "{},"{}\\\#\# dbl (2): Farther.vals, Closer.vals\\\#\# \\\#\# i Use `spec()` to retrieve the full column specification for this data.\\\#\# i Specify the column types or set `show\_col\_types = FALSE` to quiet this message.}}\begin{verbatim}
+## 
+## 	One Sample t-test
+## 
+## data:  data$Closer.vals
+## t = 8.3024, df = 24, p-value = 1.626e-08
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  0.1173875 0.1950586
+## sample estimates:
+## mean of x 
+## 0.1562231
+## 
+## 	One Sample t-test
+## 
+## data:  data$Farther.vals
+## t = -7.778, df = 24, p-value = 5.175e-08
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  -0.2565176 -0.1489313
+## sample estimates:
+##  mean of x 
+## -0.2027244
+## 
+## 	One Sample t-test
+## 
+## data:  data$difference
+## t = 8.5109, df = 24, p-value = 1.037e-08
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  0.2719028 0.4459921
+## sample estimates:
+## mean of x 
+## 0.3589475
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -170,6 +211,7 @@ hypothesis testing plots for each part of the previous question.
   \item Question 4, part(c).
 \end{enumerate}
 \end{enumerate}
+
 
 
 \bibliography{bibliography}
