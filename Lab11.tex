@@ -92,6 +92,10 @@ $t$ test.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hldef{(pwr)}
+\hlkwd{pwr.t.test}\hldef{(}\hlkwc{n} \hldef{=} \hlkwa{NULL}\hldef{,} \hlkwc{d} \hldef{=} \hlnum{0.65}\hldef{,} \hlkwc{sig.level} \hldef{=} \hlnum{0.05}\hldef{,} \hlkwc{power} \hldef{=} \hlnum{0.8}\hldef{,} \hlkwc{type} \hldef{=} \hlsng{"one.sample"}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\end{alltt}
 \begin{verbatim}
 ## 
 ##      One-sample t test power calculation 
@@ -118,7 +122,17 @@ do to collect the data for Figure 2(g). Note that you only need the
 \texttt{mutate()} the data to get a difference 
 (e.g., \texttt{closer\_vals - further\_vals}).
 
-
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
+\hlkwd{view}\hldef{(data)}
+\hldef{data} \hlkwb{=} \hldef{data |>}
+  \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer.vals} \hlopt{-} \hldef{Farther.vals)}
+\hlkwd{view}\hldef{(data)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SUMMARIZE DATA
@@ -140,7 +154,30 @@ do to collect the data for Figure 2(g). Note that you only need the
   the range created by adding the mean $\pm$ one standard deviation.
 \end{enumerate}
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
+
+\hldef{data} \hlkwb{=} \hldef{data |>}
+  \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer.vals} \hlopt{-} \hldef{Farther.vals)}
+
+\hldef{summary} \hlkwb{=} \hlkwd{tibble}\hldef{(}
+  \hlkwc{Condition} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"Farther"}\hldef{,} \hlsng{"Closer"}\hldef{,} \hlsng{"Difference"}\hldef{),}
+  \hlkwc{Mean} \hldef{=} \hlkwd{c}\hldef{(}\hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{Farther.vals),} \hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{Closer.vals),} \hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{difference)),}
+  \hlkwc{SD} \hldef{=} \hlkwd{c}\hldef{(}\hlkwd{sd}\hldef{(data}\hlopt{$}\hldef{Farther.vals),} \hlkwd{sd}\hldef{(data}\hlopt{$}\hldef{Closer.vals),} \hlkwd{sd}\hldef{(data}\hlopt{$}\hldef{difference))}
+\hldef{)}
+
+\hlkwd{ggplot}\hldef{(summary,} \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= Condition,} \hlkwc{y} \hldef{= Mean))} \hlopt{+}
+  \hlkwd{geom_col}\hldef{()} \hlopt{+}
+  \hlkwd{geom_errorbar}\hldef{(}\hlkwd{aes}\hldef{(}\hlkwc{ymin} \hldef{= Mean} \hlopt{-} \hldef{SD,} \hlkwc{ymax} \hldef{= Mean} \hlopt{+} \hldef{SD))} \hlopt{+}
+  \hlkwd{labs}\hldef{(}
+    \hlkwc{title} \hldef{=} \hlsng{"Summary of Dopamine Responses"}\hldef{,}
+    \hlkwc{x} \hldef{=} \hlsng{"Condition"}\hldef{,}
+    \hlkwc{y} \hldef{=} \hlsng{"Mean ± 1 SD"}
+  \hldef{)} \hlopt{+}
+  \hlkwd{theme_minimal}\hldef{()}
+\end{alltt}
+\end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
 \end{knitrout}
 
@@ -160,9 +197,16 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
 
-
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Rows: 25 Columns: 2\\\#\# -- Column specification --------------------------------------------------------\\\#\# Delimiter: "{},"{}\\\#\# dbl (2): Farther.vals, Closer.vals\\\#\# \\\#\# i Use `spec()` to retrieve the full column specification for this data.\\\#\# i Specify the column types or set `show\_col\_types = FALSE` to quiet this message.}}\begin{verbatim}
+\hldef{data} \hlkwb{=} \hldef{data |>}
+  \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer.vals} \hlopt{-} \hldef{Farther.vals)}
+\hlcom{# a }
+\hldef{ttest.closer} \hlkwb{=} \hlkwd{t.test}\hldef{(data}\hlopt{$}\hldef{Closer.vals,} \hlkwc{mu} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hldef{ttest.closer}
+\end{alltt}
+\begin{verbatim}
 ## 
 ## 	One Sample t-test
 ## 
@@ -174,6 +218,13 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
 ## sample estimates:
 ## mean of x 
 ## 0.1562231
+\end{verbatim}
+\begin{alltt}
+\hlcom{# b}
+\hldef{ttest.farther} \hlkwb{=} \hlkwd{t.test}\hldef{(data}\hlopt{$}\hldef{Farther.vals,} \hlkwc{mu} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hldef{ttest.farther}
+\end{alltt}
+\begin{verbatim}
 ## 
 ## 	One Sample t-test
 ## 
@@ -185,6 +236,13 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
 ## sample estimates:
 ##  mean of x 
 ## -0.2027244
+\end{verbatim}
+\begin{alltt}
+\hlcom{# c}
+\hldef{ttest.difference} \hlkwb{=} \hlkwd{t.test}\hldef{(data}\hlopt{$}\hldef{difference,} \hlkwc{mu} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
+\hldef{ttest.difference}
+\end{alltt}
+\begin{verbatim}
 ## 
 ## 	One Sample t-test
 ## 
@@ -212,7 +270,72 @@ hypothesis testing plots for each part of the previous question.
 \end{enumerate}
 \end{enumerate}
 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hldef{(patchwork)}
+\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
 
+\hldef{data} \hlkwb{=} \hldef{data |>}
+  \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer.vals} \hlopt{-} \hldef{Farther.vals)}
+
+\hldef{plot.t.test} \hlkwb{=} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{mu0} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{test_title} \hldef{=} \hlsng{"T-Test"}\hldef{,} \hlkwc{subtitle} \hldef{=} \hlkwa{NULL}\hldef{) \{}
+  \hldef{n} \hlkwb{=} \hlkwd{length}\hldef{(x)}
+  \hldef{xbar} \hlkwb{=} \hlkwd{mean}\hldef{(x)}
+  \hldef{s} \hlkwb{=} \hlkwd{sd}\hldef{(x)}
+  \hldef{t.stat} \hlkwb{=} \hldef{(xbar} \hlopt{-} \hldef{mu0)} \hlopt{/} \hldef{(s} \hlopt{/} \hlkwd{sqrt}\hldef{(n))}
+  \hldef{df} \hlkwb{=} \hldef{n} \hlopt{-} \hlnum{1}
+
+  \hlcom{# Generate theoretical null distribution}
+  \hldef{ggdat.t} \hlkwb{=} \hlkwd{tibble}\hldef{(}\hlkwc{t} \hldef{=} \hlkwd{seq}\hldef{(}\hlopt{-}\hlnum{5}\hldef{,} \hlnum{5}\hldef{,} \hlkwc{length.out} \hldef{=} \hlnum{1000}\hldef{)) |>}
+    \hlkwd{mutate}\hldef{(}\hlkwc{pdf.null} \hldef{=} \hlkwd{dt}\hldef{(t,} \hlkwc{df} \hldef{= df))}
+  \hldef{ggdat.obs} \hlkwb{=} \hlkwd{tibble}\hldef{(}\hlkwc{t} \hldef{= t.stat,} \hlkwc{y} \hldef{=} \hlnum{0}\hldef{)}
+
+  \hlcom{# Critical values & matching x for second axis}
+  \hldef{t.breaks} \hlkwb{=} \hlkwd{c}\hldef{(}\hlopt{-}\hlnum{5}\hldef{,} \hlkwd{qt}\hldef{(}\hlnum{0.025}\hldef{,} \hlkwc{df} \hldef{= df),} \hlnum{0}\hldef{,} \hlkwd{qt}\hldef{(}\hlnum{0.975}\hldef{,} \hlkwc{df} \hldef{= df),} \hlnum{5}\hldef{, t.stat)}
+  \hldef{xbar.breaks} \hlkwb{=} \hldef{t.breaks} \hlopt{*} \hldef{(s} \hlopt{/} \hlkwd{sqrt}\hldef{(n))} \hlopt{+} \hldef{mu0}
+
+  \hlcom{# Final plot}
+  \hlkwd{ggplot}\hldef{()} \hlopt{+}
+    \hlkwd{geom_line}\hldef{(}\hlkwc{data} \hldef{= ggdat.t,} \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= t,} \hlkwc{y} \hldef{= pdf.null),} \hlkwc{color} \hldef{=} \hlsng{"blue"}\hldef{)} \hlopt{+}
+    \hlkwd{geom_hline}\hldef{(}\hlkwc{yintercept} \hldef{=} \hlnum{0}\hldef{)} \hlopt{+}
+    \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data} \hldef{=} \hlkwd{subset}\hldef{(ggdat.t, t} \hlopt{<=} \hlkwd{qt}\hldef{(}\hlnum{0.025}\hldef{,} \hlkwc{df} \hldef{= df)),}
+                \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= t,} \hlkwc{ymin} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{ymax} \hldef{= pdf.null),} \hlkwc{fill} \hldef{=} \hlsng{"grey"}\hldef{,} \hlkwc{alpha} \hldef{=} \hlnum{0.5}\hldef{)} \hlopt{+}
+    \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data} \hldef{=} \hlkwd{subset}\hldef{(ggdat.t, t} \hlopt{>=} \hlkwd{qt}\hldef{(}\hlnum{0.975}\hldef{,} \hlkwc{df} \hldef{= df)),}
+                \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= t,} \hlkwc{ymin} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{ymax} \hldef{= pdf.null),} \hlkwc{fill} \hldef{=} \hlsng{"grey"}\hldef{,} \hlkwc{alpha} \hldef{=} \hlnum{0.5}\hldef{)} \hlopt{+}
+    \hlkwd{geom_ribbon}\hldef{(}\hlkwc{data} \hldef{=} \hlkwd{subset}\hldef{(ggdat.t, t} \hlopt{>=} \hldef{t.stat),}
+                \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= t,} \hlkwc{ymin} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{ymax} \hldef{= pdf.null),} \hlkwc{fill} \hldef{=} \hlsng{"red"}\hldef{,} \hlkwc{alpha} \hldef{=} \hlnum{0.25}\hldef{)} \hlopt{+}
+    \hlkwd{geom_point}\hldef{(}\hlkwc{data} \hldef{= ggdat.obs,} \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= t,} \hlkwc{y} \hldef{= y),} \hlkwc{color} \hldef{=} \hlsng{"red"}\hldef{,} \hlkwc{size} \hldef{=} \hlnum{3}\hldef{)} \hlopt{+}
+    \hlkwd{theme_bw}\hldef{()} \hlopt{+}
+    \hlkwd{scale_x_continuous}\hldef{(}\hlsng{"t"}\hldef{,}
+                       \hlkwc{breaks} \hldef{=} \hlkwd{round}\hldef{(t.breaks,} \hlnum{2}\hldef{),}
+                       \hlkwc{sec.axis} \hldef{=} \hlkwd{sec_axis}\hldef{(}\hlopt{~}\hldef{.,}
+                                           \hlkwc{name} \hldef{=} \hlkwd{expression}\hldef{(}\hlkwd{bar}\hldef{(x)),}
+                                           \hlkwc{breaks} \hldef{= t.breaks,}
+                                           \hlkwc{labels} \hldef{=} \hlkwd{round}\hldef{(xbar.breaks,} \hlnum{2}\hldef{)))} \hlopt{+}
+    \hlkwd{ylab}\hldef{(}\hlsng{"Density"}\hldef{)} \hlopt{+}
+    \hlkwd{ggtitle}\hldef{(test_title,} \hlkwc{subtitle} \hldef{= subtitle)}
+\hldef{\}}
+
+\hldef{closer} \hlkwb{=} \hlkwd{plot.t.test}\hldef{(data}\hlopt{$}\hldef{Closer.vals,}
+            \hlkwc{mu0} \hldef{=} \hlnum{0}\hldef{,}
+            \hlkwc{test_title} \hldef{=} \hlsng{"Dopamine Response (Closer)"}\hldef{,}
+            \hlkwc{subtitle} \hldef{=} \hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0} \hlopt{~} \hlsng{";"} \hlopt{~} \hldef{H[a]} \hlopt{!=} \hlnum{0}\hldef{))}
+
+\hldef{farther} \hlkwb{=} \hlkwd{plot.t.test}\hldef{(data}\hlopt{$}\hldef{Farther.vals,}
+            \hlkwc{mu0} \hldef{=} \hlnum{0}\hldef{,}
+            \hlkwc{test_title} \hldef{=} \hlsng{"Dopamine Response (Farther)"}\hldef{,}
+            \hlkwc{subtitle} \hldef{=} \hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0} \hlopt{~} \hlsng{";"} \hlopt{~} \hldef{H[a]} \hlopt{!=} \hlnum{0}\hldef{))}
+
+\hldef{diff} \hlkwb{=} \hlkwd{plot.t.test}\hldef{(data}\hlopt{$}\hldef{difference,}
+            \hlkwc{mu0} \hldef{=} \hlnum{0}\hldef{,}
+            \hlkwc{test_title} \hldef{=} \hlsng{"Dopamine Response (Difference)"}\hldef{,}
+            \hlkwc{subtitle} \hldef{=} \hlkwd{bquote}\hldef{(H[}\hlnum{0}\hldef{]}\hlopt{==}\hlnum{0} \hlopt{~} \hlsng{";"} \hlopt{~} \hldef{H[a]} \hlopt{!=} \hlnum{0}\hldef{))}
+\hldef{(closer} \hlopt{|} \hldef{farther)} \hlopt{|} \hldef{diff}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-6-1} 
+\end{knitrout}
 
 \bibliography{bibliography}
 \end{document}
