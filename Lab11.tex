@@ -153,20 +153,62 @@ do to collect the data for Figure 2(g). Note that you only need the
   Note that the you can use \texttt{geom\_errorbar()} to plot
   the range created by adding the mean $\pm$ one standard deviation.
 \end{enumerate}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Condition & Mean & Variance & SD \\ 
+  \hline
+1 & Farther & -0.20 & 0.02 & 0.13 \\ 
+  2 & Closer & 0.16 & 0.01 & 0.09 \\ 
+  3 & Difference & 0.36 & 0.36 & 0.21 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\textbf{(a)} The mean for \texttt{Farther.vals} is negative suggesting dopamine levels may decrease when zebra finches sing further from the adult version of their song. We cannot yet say if this relationship is statistically discernible. 
+
+\textbf{(b)} The mean for \texttt{Closer.vals} is positive suggesting the opposite of \texttt{Farther.vals} where dopamine levels may increase when zebra finches sing closer to the adult version of their song.
+
+\textbf{(c)} The mean for \texttt{Closer.vals - Farther.vals} is positive and further reinforces the idea that dopamine levels are higher when zebra finches sing closer to the adult versions of their songs. The error bar plot shows some variability, but more tests are needed to imply how statistically discernible this relationship is. 
+
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
+\hlkwd{library}\hldef{(xtable)}
 
+\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
 \hldef{data} \hlkwb{=} \hldef{data |>}
   \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer.vals} \hlopt{-} \hldef{Farther.vals)}
 
 \hldef{summary} \hlkwb{=} \hlkwd{tibble}\hldef{(}
   \hlkwc{Condition} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"Farther"}\hldef{,} \hlsng{"Closer"}\hldef{,} \hlsng{"Difference"}\hldef{),}
   \hlkwc{Mean} \hldef{=} \hlkwd{c}\hldef{(}\hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{Farther.vals),} \hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{Closer.vals),} \hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{difference)),}
+  \hlkwc{Variance} \hldef{=} \hlkwd{c}\hldef{(}\hlkwd{var}\hldef{(data}\hlopt{$}\hldef{Farther.vals),} \hlkwd{var}\hldef{(data}\hlopt{$}\hldef{Closer.vals),} \hlkwd{mean}\hldef{(data}\hlopt{$}\hldef{difference)),}
   \hlkwc{SD} \hldef{=} \hlkwd{c}\hldef{(}\hlkwd{sd}\hldef{(data}\hlopt{$}\hldef{Farther.vals),} \hlkwd{sd}\hldef{(data}\hlopt{$}\hldef{Closer.vals),} \hlkwd{sd}\hldef{(data}\hlopt{$}\hldef{difference))}
 \hldef{)}
 
+\hlkwd{view}\hldef{(summary)}
+\hlkwd{xtable}\hldef{(summary)}
+\end{alltt}
+\begin{verbatim}
+## % latex table generated in R 4.5.0 by xtable 1.8-4 package
+## % Tue Apr 15 12:55:28 2025
+## \begin{table}[ht]
+## \centering
+## \begin{tabular}{rlrrr}
+##   \hline
+##  & Condition & Mean & Variance & SD \\ 
+##   \hline
+## 1 & Farther & -0.20 & 0.02 & 0.13 \\ 
+##   2 & Closer & 0.16 & 0.01 & 0.09 \\ 
+##   3 & Difference & 0.36 & 0.36 & 0.21 \\ 
+##    \hline
+## \end{tabular}
+## \end{table}
+\end{verbatim}
+\begin{alltt}
 \hlkwd{ggplot}\hldef{(summary,} \hlkwd{aes}\hldef{(}\hlkwc{x} \hldef{= Condition,} \hlkwc{y} \hldef{= Mean))} \hlopt{+}
   \hlkwd{geom_col}\hldef{()} \hlopt{+}
   \hlkwd{geom_errorbar}\hldef{(}\hlkwd{aes}\hldef{(}\hlkwc{ymin} \hldef{= Mean} \hlopt{-} \hldef{SD,} \hlkwc{ymax} \hldef{= Mean} \hlopt{+} \hldef{SD))} \hlopt{+}
@@ -180,6 +222,8 @@ do to collect the data for Figure 2(g). Note that you only need the
 \end{kframe}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4-1} 
 \end{knitrout}
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
@@ -198,64 +242,40 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{data} \hlkwb{=} \hlkwd{read_csv}\hldef{(}\hlsng{"lab11data.csv"}\hldef{)}
+data = \hlkwd{read_csv}(\hlsng{"lab11data.csv"})
 
-\hldef{data} \hlkwb{=} \hldef{data |>}
-  \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer.vals} \hlopt{-} \hldef{Farther.vals)}
+data = data |>
+  \hlkwd{mutate}(difference = Closer.vals - Farther.vals)
 \hlcom{# a }
-\hldef{ttest.closer} \hlkwb{=} \hlkwd{t.test}\hldef{(data}\hlopt{$}\hldef{Closer.vals,} \hlkwc{mu} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
-\hldef{ttest.closer}
-\end{alltt}
-\begin{verbatim}
-## 
-## 	One Sample t-test
-## 
-## data:  data$Closer.vals
-## t = 8.3024, df = 24, p-value = 1.626e-08
-## alternative hypothesis: true mean is not equal to 0
-## 95 percent confidence interval:
-##  0.1173875 0.1950586
-## sample estimates:
-## mean of x 
-## 0.1562231
-\end{verbatim}
-\begin{alltt}
+ttest.closer = \hlkwd{t.test}(data$Closer.vals, mu = 0, alternative = \hlsng{"two.sided"})
+ttest.closer
+g.closer = \hlkwd{mean}(data$Closer.vals) / \hlkwd{sd}(data$Closer.vals)
+
 \hlcom{# b}
-\hldef{ttest.farther} \hlkwb{=} \hlkwd{t.test}\hldef{(data}\hlopt{$}\hldef{Farther.vals,} \hlkwc{mu} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
-\hldef{ttest.farther}
-\end{alltt}
-\begin{verbatim}
-## 
-## 	One Sample t-test
-## 
-## data:  data$Farther.vals
-## t = -7.778, df = 24, p-value = 5.175e-08
-## alternative hypothesis: true mean is not equal to 0
-## 95 percent confidence interval:
-##  -0.2565176 -0.1489313
-## sample estimates:
-##  mean of x 
-## -0.2027244
-\end{verbatim}
-\begin{alltt}
+ttest.farther = \hlkwd{t.test}(data$Farther.vals, mu = 0, alternative = \hlsng{"two.sided"})
+ttest.farther
+g.farther = \hlkwd{mean}(data$Farther.vals) / \hlkwd{sd}(data$Farther.vals)
+
 \hlcom{# c}
-\hldef{ttest.difference} \hlkwb{=} \hlkwd{t.test}\hldef{(data}\hlopt{$}\hldef{difference,} \hlkwc{mu} \hldef{=} \hlnum{0}\hldef{,} \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{)}
-\hldef{ttest.difference}
+ttest.difference = \hlkwd{t.test}(data$difference, mu = 0, alternative = \hlsng{"two.sided"})
+ttest.difference
+g.difference = \hlkwd{mean}(data$difference) / \hlkwd{sd}(data$difference)
+
+t_summary = \hlkwd{tibble}(
+  Test = \hlkwd{c}(\hlsng{"Closer"}, \hlsng{"Farther"}, \hlsng{"Difference"}),
+  t_statistic = \hlkwd{c}(ttest.closer$statistic, ttest.farther$statistic, ttest.difference$statistic),
+  p_value = \hlkwd{c}(ttest.closer$p.value, ttest.farther$p.value, ttest.difference$p.value),
+  g = \hlkwd{c}(g.closer, g.farther, g.difference)
+  CI_lower = \hlkwd{c}(ttest.closer$conf.int[1], ttest.farther$conf.int[1], ttest.difference$conf.int[1]),
+  CI_upper = \hlkwd{c}(ttest.farther$conf.int[2], ttest.farther$conf.int[2], ttest.difference$conf.int[2]),
+  mean = \hlkwd{c}(\hlkwd{mean}(data$Closer.vals), \hlkwd{mean}(data$Farther.vals), \hlkwd{mean}(data$difference)),
+)
+
+t_summary
 \end{alltt}
-\begin{verbatim}
-## 
-## 	One Sample t-test
-## 
-## data:  data$difference
-## t = 8.5109, df = 24, p-value = 1.037e-08
-## alternative hypothesis: true mean is not equal to 0
-## 95 percent confidence interval:
-##  0.2719028 0.4459921
-## sample estimates:
-## mean of x 
-## 0.3589475
-\end{verbatim}
-\end{kframe}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in parse(text = input): <text>:25:3: unexpected symbol\\\#\# 24: \ \ g = c(g.closer, g.farther, g.difference)\\\#\# 25: \ \ CI\_lower\\\#\# \ \ \ \ \ \ \textasciicircum{}}}\end{kframe}
 \end{knitrout}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -339,3 +359,15 @@ hypothesis testing plots for each part of the previous question.
 
 \bibliography{bibliography}
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+

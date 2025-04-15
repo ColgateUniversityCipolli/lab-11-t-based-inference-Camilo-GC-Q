@@ -89,17 +89,42 @@ view(data)
   Note that the you can use \texttt{geom\_errorbar()} to plot
   the range created by adding the mean $\pm$ one standard deviation.
 \end{enumerate}
-<<echo=T, message=F, warning=F>>=
-data = read_csv("lab11data.csv")
 
+\begin{table}[ht]
+\centering
+\begin{tabular}{rlrrr}
+  \hline
+ & Condition & Mean & Variance & SD \\ 
+  \hline
+1 & Farther & -0.20 & 0.02 & 0.13 \\ 
+  2 & Closer & 0.16 & 0.01 & 0.09 \\ 
+  3 & Difference & 0.36 & 0.36 & 0.21 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\textbf{(a)} The mean for \texttt{Farther.vals} is negative suggesting dopamine levels may decrease when zebra finches sing further from the adult version of their song. We cannot yet say if this relationship is statistically discernible. 
+
+\textbf{(b)} The mean for \texttt{Closer.vals} is positive suggesting the opposite of \texttt{Farther.vals} where dopamine levels may increase when zebra finches sing closer to the adult version of their song.
+
+\textbf{(c)} The mean for \texttt{Closer.vals - Farther.vals} is positive and further reinforces the idea that dopamine levels are higher when zebra finches sing closer to the adult versions of their songs. The error bar plot shows some variability, but more tests are needed to imply how statistically discernible this relationship is. 
+
+<<echo=T, message=F, warning=F>>=
+library(xtable)
+
+data = read_csv("lab11data.csv")
 data = data |>
   mutate(difference = Closer.vals - Farther.vals)
 
 summary = tibble(
   Condition = c("Farther", "Closer", "Difference"),
   Mean = c(mean(data$Farther.vals), mean(data$Closer.vals), mean(data$difference)),
+  Variance = c(var(data$Farther.vals), var(data$Closer.vals), mean(data$difference)),
   SD = c(sd(data$Farther.vals), sd(data$Closer.vals), sd(data$difference))
 )
+
+view(summary)
+xtable(summary)
 
 ggplot(summary, aes(x = Condition, y = Mean)) +
   geom_col() +
@@ -111,10 +136,9 @@ ggplot(summary, aes(x = Condition, y = Mean)) +
   ) +
   theme_minimal()
 
-
-
-
 @
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
@@ -138,14 +162,29 @@ data = data |>
 # a 
 ttest.closer = t.test(data$Closer.vals, mu = 0, alternative = "two.sided")
 ttest.closer
+g.closer = mean(data$Closer.vals) / sd(data$Closer.vals)
 
 # b
 ttest.farther = t.test(data$Farther.vals, mu = 0, alternative = "two.sided")
 ttest.farther
+g.farther = mean(data$Farther.vals) / sd(data$Farther.vals)
 
 # c
 ttest.difference = t.test(data$difference, mu = 0, alternative = "two.sided")
 ttest.difference
+g.difference = mean(data$difference) / sd(data$difference)
+
+t_summary = tibble(
+  Test = c("Closer", "Farther", "Difference"),
+  t_statistic = c(ttest.closer$statistic, ttest.farther$statistic, ttest.difference$statistic),
+  p_value = c(ttest.closer$p.value, ttest.farther$p.value, ttest.difference$p.value),
+  g = c(g.closer, g.farther, g.difference)
+  CI_lower = c(ttest.closer$conf.int[1], ttest.farther$conf.int[1], ttest.difference$conf.int[1]),
+  CI_upper = c(ttest.farther$conf.int[2], ttest.farther$conf.int[2], ttest.difference$conf.int[2]),
+  mean = c(mean(data$Closer.vals), mean(data$Farther.vals), mean(data$difference)),
+)
+
+t_summary
 @
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -224,3 +263,15 @@ diff = plot.t.test(data$difference,
 
 \bibliography{bibliography}
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
